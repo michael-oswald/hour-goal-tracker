@@ -1,9 +1,7 @@
 package goshipcode.hourgoaltracker;
 
-import goshipcode.hourgoaltracker.model.GoalModel;
+import goshipcode.hourgoaltracker.model.GoalModelDto;
 
 public interface Service {
-    GoalModel get(String userId);
-
-
+    GoalModelDto get(String userId);
 }

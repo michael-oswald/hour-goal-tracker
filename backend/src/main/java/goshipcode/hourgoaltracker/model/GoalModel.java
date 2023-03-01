@@ -26,6 +26,7 @@ public class GoalModel {
     }
 
     @Data
+    @DynamoDbBean
     public static class GoalHour {
         private Boolean completed;
         private Long timeCompleted;

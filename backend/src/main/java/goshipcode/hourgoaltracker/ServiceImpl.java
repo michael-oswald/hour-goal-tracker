@@ -2,8 +2,16 @@ package goshipcode.hourgoaltracker;
 
 import goshipcode.hourgoaltracker.dao.Repository;
 import goshipcode.hourgoaltracker.model.GoalModel;
+import goshipcode.hourgoaltracker.model.GoalModelDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
+@Slf4j
+@Component
 public class ServiceImpl implements Service {
 
     private Repository repository;
@@ -14,9 +22,28 @@ public class ServiceImpl implements Service {
     }
 
     @Override
-    public GoalModel get(String userId) {
+    public GoalModelDto get(String userId) {
         GoalModel goalModel = repository.get(userId);
 
-        return goalModel;
+        log.debug("successfully fetched GoalModel from repository {}", goalModel);
+        return goalModelToDto(goalModel);
+    }
+
+    private GoalModelDto goalModelToDto(GoalModel goalModel) {
+
+        List<GoalModelDto.GoalHourDto> list = new ArrayList<>();
+
+        for (GoalModel.GoalHour goalHour : goalModel.getGoalHours()) {
+            GoalModelDto.GoalHourDto goalHourDto = new GoalModelDto.GoalHourDto();
+            goalHourDto.setCompleted(goalHour.getCompleted());
+            goalHourDto.setTimeCompleted(goalHour.getTimeCompleted());
+            list.add(goalHourDto);
+        }
+
+        return GoalModelDto.builder()
+                        .goalHours(list)
+                        .timestampCreated(goalModel.getTimestampCreated())
+                        .goalName(goalModel.getGoalName())
+                        .userId(goalModel.getUserId()).build();
     }
 }
