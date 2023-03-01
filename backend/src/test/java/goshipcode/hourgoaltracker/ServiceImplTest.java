@@ -33,7 +33,7 @@ public class ServiceImplTest {
         //given
         String userId = "userId";
         Long timestamp = Instant.now().toEpochMilli();
-        GoalModel expected = new GoalModel("userId", "myCoolGoal", getGoalHours(), timestamp, timestamp + 10L);
+        GoalModel expected = new GoalModel("UserId#userId", "myCoolGoal", getGoalHours(), timestamp, timestamp + 10L);
         Mockito.when(repository.get(anyString())).thenReturn(expected);
 
         //when
@@ -42,11 +42,10 @@ public class ServiceImplTest {
         //then
         Mockito.verify(repository, times(1)).get(anyString());
         Assertions.assertNotNull(actual);
-        Assertions.assertEquals(expected.getUserId(), actual.getUserId());
+        Assertions.assertEquals("userId", actual.getUserId());
         Assertions.assertEquals(expected.getGoalName(), actual.getGoalName());
         Assertions.assertEquals(expected.getGoalHours().get(0).getCompleted(), actual.getGoalHours().get(0).getCompleted());
         Assertions.assertEquals(expected.getGoalHours().get(3).getTimeCompleted(), actual.getGoalHours().get(3).getTimeCompleted());
-
     }
 
     private List<GoalModel.GoalHour> getGoalHours () {

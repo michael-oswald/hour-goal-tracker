@@ -39,11 +39,12 @@ public class ServiceImpl implements Service {
             goalHourDto.setTimeCompleted(goalHour.getTimeCompleted());
             list.add(goalHourDto);
         }
+        String trimmedStr = goalModel.getUserId().substring(7);
 
         return GoalModelDto.builder()
                         .goalHours(list)
                         .timestampCreated(goalModel.getTimestampCreated())
                         .goalName(goalModel.getGoalName())
-                        .userId(goalModel.getUserId()).build();
+                        .userId(trimmedStr).build();
     }
 }
