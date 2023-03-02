@@ -41,7 +41,9 @@ public class RepositoryDDBImpl implements Repository {
     }
 
     @Override
-    public void put(GoalModel goalModel) {
-
+    public void save(GoalModel goalModel) {
+        DynamoDbTable<GoalModel> table = dynamoDbEnhancedClient.table(dynamodbTableName, TableSchema.fromBean(GoalModel.class));
+        goalModel.setUserId(KEY_PREFIX + goalModel.getUserId());
+        table.putItem(goalModel);
     }
 }

@@ -1,10 +1,9 @@
 package goshipcode.hourgoaltracker;
 
 import goshipcode.hourgoaltracker.model.GoalModelDto;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class Controller {
@@ -22,6 +21,13 @@ public class Controller {
 
         return goalModelDto;
     }
+
+    @PostMapping("/goal")
+    void post(@RequestBody @Valid GoalModelDto goalModelDto) {
+        service.post(goalModelDto);
+    }
+
+    //can have put be smart, and any portion of the goalmodeldto can be filled in, and you just update that one part.
 /*
     @PostMapping("/employees")
     Object newEmployee() {

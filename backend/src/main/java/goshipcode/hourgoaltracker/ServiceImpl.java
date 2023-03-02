@@ -29,22 +29,64 @@ public class ServiceImpl implements Service {
         return goalModelToDto(goalModel);
     }
 
+    @Override
+    public void post(GoalModelDto goalModelDto) {
+        repository.save(goalModelDtoToGoalModel(goalModelDto));
+
+    }
+
     private GoalModelDto goalModelToDto(GoalModel goalModel) {
 
-        List<GoalModelDto.GoalHourDto> list = new ArrayList<>();
+        List<GoalModelDto.GoalDto> goals = new ArrayList<>();
 
-        for (GoalModel.GoalHour goalHour : goalModel.getGoalHours()) {
-            GoalModelDto.GoalHourDto goalHourDto = new GoalModelDto.GoalHourDto();
-            goalHourDto.setCompleted(goalHour.getCompleted());
-            goalHourDto.setTimeCompleted(goalHour.getTimeCompleted());
-            list.add(goalHourDto);
+        for (GoalModel.Goal goal : goalModel.getGoals()) {
+            List<GoalModelDto.GoalHourDto> goalHourDtos = new ArrayList<>();
+
+            for (GoalModel.GoalHour goalHour : goal.getGoalHours()) {
+                GoalModelDto.GoalHourDto goalHourDto = new GoalModelDto.GoalHourDto();
+                goalHourDto.setCompleted(goalHour.getCompleted());
+                goalHourDto.setTimeCompleted(goalHour.getTimeCompleted());
+                goalHourDtos.add(goalHourDto);
+            }
+
+            GoalModelDto.GoalDto goalDto = new GoalModelDto.GoalDto();
+            goalDto.setGoalName(goal.getGoalName());
+            goalDto.setTimestampCreated(goal.getTimestampCreated());
+            goalDto.setGoalHourDtos(goalHourDtos);
+            goals.add(goalDto);
         }
+
+
         String trimmedStr = goalModel.getUserId().substring(7);
 
         return GoalModelDto.builder()
-                        .goalHours(list)
-                        .timestampCreated(goalModel.getTimestampCreated())
-                        .goalName(goalModel.getGoalName())
+                        .goals(goals)
                         .userId(trimmedStr).build();
+    }
+
+    private GoalModel goalModelDtoToGoalModel(GoalModelDto goalModelDto) {
+
+        List<GoalModel.Goal> list = new ArrayList<>();
+
+        for (GoalModelDto.GoalDto goalDto : goalModelDto.getGoals()) {
+            List<GoalModel.GoalHour> goalHours = new ArrayList<>();
+
+            for (GoalModelDto.GoalHourDto goalHourDto : goalDto.getGoalHourDtos()) {
+                GoalModel.GoalHour goalHour = new GoalModel.GoalHour();
+                goalHour.setCompleted(goalHourDto.getCompleted());
+                goalHour.setTimeCompleted(goalHourDto.getTimeCompleted());
+                goalHours.add(goalHour);
+            }
+
+            GoalModel.Goal goal = new GoalModel.Goal();
+            goal.setGoalName(goalDto.getGoalName());
+            goal.setTimestampCreated(goalDto.getTimestampCreated());
+            goal.setGoalHours(goalHours);
+            list.add(goal);
+        }
+
+        return GoalModel.builder()
+                .goals(list)
+                .userId(goalModelDto.getUserId()).build();
     }
 }

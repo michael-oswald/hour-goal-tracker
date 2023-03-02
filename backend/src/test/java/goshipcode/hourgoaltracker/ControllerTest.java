@@ -10,6 +10,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -29,7 +30,7 @@ class ControllerTest {
     void get() {
         //given
         String userId = "userId";
-        GoalModelDto expected = new GoalModelDto("userId", "myCoolGoal", null, null);
+        GoalModelDto expected = new GoalModelDto("userId", new ArrayList<>());
         Mockito.when(service.get(anyString())).thenReturn(expected);
 
         //when
@@ -39,5 +40,19 @@ class ControllerTest {
         Mockito.verify(service, times(1)).get(anyString());
         Assertions.assertNotNull(actual);
         Assertions.assertEquals(expected.getUserId(), actual.getUserId());
+    }
+
+    @Test
+    void post() {
+        //given
+        GoalModelDto goalModelDto = new GoalModelDto("userId", new ArrayList<>());
+        Mockito.doNothing().when(service).post(any(GoalModelDto.class));
+
+        //when
+        controller.post(goalModelDto);
+
+        //then
+        Mockito.verify(service, times(1)).post(any(GoalModelDto.class));
+
     }
 }

@@ -6,6 +6,7 @@ import goshipcode.hourgoaltracker.model.GoalModelDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -16,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 
@@ -33,7 +35,13 @@ public class ServiceImplTest {
         //given
         String userId = "userId";
         Long timestamp = Instant.now().toEpochMilli();
-        GoalModel expected = new GoalModel("UserId#userId", "myCoolGoal", getGoalHours(), timestamp, timestamp + 10L);
+        List<GoalModel.Goal> goals = new ArrayList<>();
+        GoalModel.Goal goal = new GoalModel.Goal();
+        goal.setGoalHours(getGoalHours(timestamp));
+        goal.setTimestampCreated(timestamp);
+        goal.setGoalName("coolGoalName");
+        goals.add(goal);
+        GoalModel expected = new GoalModel("UserId#userId", goals);
         Mockito.when(repository.get(anyString())).thenReturn(expected);
 
         //when
@@ -43,12 +51,44 @@ public class ServiceImplTest {
         Mockito.verify(repository, times(1)).get(anyString());
         Assertions.assertNotNull(actual);
         Assertions.assertEquals("userId", actual.getUserId());
-        Assertions.assertEquals(expected.getGoalName(), actual.getGoalName());
-        Assertions.assertEquals(expected.getGoalHours().get(0).getCompleted(), actual.getGoalHours().get(0).getCompleted());
-        Assertions.assertEquals(expected.getGoalHours().get(3).getTimeCompleted(), actual.getGoalHours().get(3).getTimeCompleted());
+        Assertions.assertEquals(expected.getGoals().get(0).getGoalName(), actual.getGoals().get(0).getGoalName());
+        Assertions.assertEquals(expected.getGoals().get(0).getGoalHours().get(0).getCompleted(), actual.getGoals().get(0).getGoalHourDtos().get(0).getCompleted());
+        Assertions.assertEquals(expected.getGoals().get(0).getGoalHours().get(0).getTimeCompleted(), actual.getGoals().get(0).getGoalHourDtos().get(0).getTimeCompleted());
     }
 
-    private List<GoalModel.GoalHour> getGoalHours () {
+    @Test
+    public void testPostGoalModel() {
+        //given
+        Long timestamp = Instant.now().toEpochMilli();
+
+        List<GoalModelDto.GoalDto> goals = new ArrayList<>();
+        GoalModelDto.GoalDto goalDto = new GoalModelDto.GoalDto();
+        goalDto.setGoalHourDtos(getGoalHoursDto(timestamp));
+        goalDto.setTimestampCreated(timestamp);
+        goalDto.setGoalName("coolGoalName");
+        goals.add(goalDto);
+
+        GoalModelDto goalModelDto = new GoalModelDto("userId", goals);
+        ArgumentCaptor<GoalModel> goalModelArgumentCaptor = ArgumentCaptor.forClass(GoalModel.class);
+
+        List<GoalModel.Goal> goalList = new ArrayList<>();
+        GoalModel.Goal goal = new GoalModel.Goal();
+        goal.setGoalHours(getGoalHours(timestamp));
+        goal.setTimestampCreated(timestamp);
+        goal.setGoalName("coolGoalName");
+        goalList.add(goal);
+        GoalModel expected = new GoalModel("userId", goalList);
+
+        //when
+        service.post(goalModelDto);
+
+        //then
+        Mockito.verify(repository, times(1)).save(goalModelArgumentCaptor.capture());
+        Assertions.assertEquals(expected, goalModelArgumentCaptor.getValue());
+
+    }
+
+    public static List<GoalModel.GoalHour> getGoalHours (Long timestamp) {
         List<GoalModel.GoalHour> list = new ArrayList<>();
         IntStream.range(1, 10).forEach(i -> {
             GoalModel.GoalHour goalHour = new GoalModel.GoalHour();
@@ -58,7 +98,24 @@ public class ServiceImplTest {
                 goalHour.setCompleted(false);
             }
 
-            goalHour.setTimeCompleted(Instant.now().toEpochMilli());
+            goalHour.setTimeCompleted(timestamp);
+            list.add(goalHour);
+        });
+
+        return list;
+    }
+
+    public static List<GoalModelDto.GoalHourDto> getGoalHoursDto(Long timestamp) {
+        List<GoalModelDto.GoalHourDto> list = new ArrayList<>();
+        IntStream.range(1, 10).forEach(i -> {
+            GoalModelDto.GoalHourDto goalHour = new GoalModelDto.GoalHourDto();
+            if (i > 5) {
+                goalHour.setCompleted(true);
+            } else {
+                goalHour.setCompleted(false);
+            }
+
+            goalHour.setTimeCompleted(timestamp);
             list.add(goalHour);
         });
 
