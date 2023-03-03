@@ -25,7 +25,14 @@ public class ServiceImpl implements Service {
     public GoalModelDto get(String userId) {
         GoalModel goalModel = repository.get(userId);
 
-        log.debug("successfully fetched GoalModel from repository {}", goalModel);
+        if (goalModel == null) {
+            GoalModelDto goalModelDto = new GoalModelDto();
+            goalModelDto.setUserId(userId);
+            goalModelDto.setGoals(new ArrayList<>());
+            return goalModelDto;
+        }
+
+        log.debug("successfully fetched a GoalModel from repository {}", goalModel);
         return goalModelToDto(goalModel);
     }
 

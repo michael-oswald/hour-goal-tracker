@@ -16,6 +16,7 @@ public class Controller {
     }
 
     @GetMapping("/goal/{userId}")
+    @CrossOrigin
     GoalModelDto get(@PathVariable String userId) {
         GoalModelDto goalModelDto = service.get(userId);
 

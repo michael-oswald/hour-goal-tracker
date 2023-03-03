@@ -8,12 +8,29 @@ export function LoginPage() {
     const navigate = useNavigate();
 
     const loginClicked = () => {
-        console.log("clicked it yo, here is email val", email);
-        navigate("/goals")
 
-        //do a rest call to backend to get the data...
-        //then do a navigation change to route the user to the GoalPage for them to configure their goals
-//look at this: https://stackoverflow.com/questions/64566405/react-router-dom-v6-usenavigate-passing-value-to-another-component
+        //make rest call to backend:
+
+        fetch('http://localhost:8080/goal/' + email, {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        })
+            .then(response => response.json())
+            .then(
+                (result) => {
+                    console.log("result", result)
+                    navigate('/goals',{state:{result}});
+                },
+                (error) => {
+                    console.log("error", error)
+                    //todo: alert, or retry, or route to error page
+                }
+            )
+
 
     }
 

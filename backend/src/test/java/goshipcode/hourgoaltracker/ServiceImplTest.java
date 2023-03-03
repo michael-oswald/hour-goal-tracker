@@ -31,6 +31,20 @@ public class ServiceImplTest {
     private Repository repository;
 
     @Test
+    public void testGetGoalModelDoesntExist() {
+        //given
+        String userId = "userid123";
+        Mockito.when(repository.get(anyString())).thenReturn(null); //return null response
+
+        //when
+        GoalModelDto actual = service.get(userId);
+
+        //then
+        Assertions.assertNotNull(actual);
+        Assertions.assertEquals("userid123", actual.getUserId());
+    }
+
+    @Test
     public void testGetGoalModel() {
         //given
         String userId = "userId";
