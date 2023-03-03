@@ -50,11 +50,14 @@ export function GoalPage() {
 
     const handleSavePositionBtnClicked = () => {
 
-        //1. create new object. Then create a new array from existing state array
+        console.log("curr Array", goalArray)
+        console.log("curr goal name", newGoalName)
+        console.log("curr goal hours", newGoalHours)
 
+        //1. create new object. Then create a new array from existing state array
         let goalHoursArray = []
         for (let i = 0; i < newGoalHours; i++) {
-            goalHoursArray.push({completed:false});
+            goalHoursArray.push({completed:false, timeCompleted:null});
         }
         let newGoalObj = {goalName:newGoalName, goalHours:goalHoursArray, timestampCreated:Date.now()};
 
@@ -62,7 +65,29 @@ export function GoalPage() {
         newArray.push(newGoalObj);
 
         //2. save that new array into backend rest call, which contains all the stuff...
+        console.log("new Array", newArray)
+        let updatePayload = {userId:userId, goals:newArray};
+        console.log("updatePayload stringified", JSON.stringify(updatePayload));
 
+        fetch('http://localhost:8080/goal', {
+            method: 'POST',
+            body: JSON.stringify(updatePayload),
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        })
+        .then(
+            (result) => {
+                console.log("result YOOOOO", result)
+                //update state
+            },
+            (error) => {
+                console.log("error", error)
+                //todo: alert, or retry, or route to error page
+            }
+        )
 
         //3. set new array into state of this component so new goal will be rendered on page.
 

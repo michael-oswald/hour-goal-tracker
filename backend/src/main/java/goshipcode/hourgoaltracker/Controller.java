@@ -19,25 +19,12 @@ public class Controller {
     @CrossOrigin
     GoalModelDto get(@PathVariable String userId) {
         GoalModelDto goalModelDto = service.get(userId);
-
         return goalModelDto;
     }
 
     @PostMapping("/goal")
+    @CrossOrigin
     void post(@RequestBody @Valid GoalModelDto goalModelDto) {
         service.post(goalModelDto);
     }
-
-    //can have put be smart, and any portion of the goalmodeldto can be filled in, and you just update that one part.
-/*
-    @PostMapping("/employees")
-    Object newEmployee() {
-        return null;
-    }
-
-    @PutMapping("/employees/{id}")
-    void replaceEmployee(*//*@RequestBody Employee newEmployee, @PathVariable Long id*//*) {
-
-        return;
-    }*/
 }

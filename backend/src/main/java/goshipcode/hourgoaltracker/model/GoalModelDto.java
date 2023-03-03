@@ -37,7 +37,7 @@ public class GoalModelDto {
     public static class GoalHourDto {
         @NotNull
         private Boolean completed;
-        @NotNull
+
         private Long timeCompleted;
     }
 

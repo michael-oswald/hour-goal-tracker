@@ -19,17 +19,17 @@ export function LoginPage() {
                 'Access-Control-Allow-Origin': '*',
             },
         })
-            .then(response => response.json())
-            .then(
-                (result) => {
-                    console.log("result", result)
-                    navigate('/goals',{state:{result}});
-                },
-                (error) => {
-                    console.log("error", error)
-                    //todo: alert, or retry, or route to error page
-                }
-            )
+        .then(response => response.json())
+        .then(
+            (result) => {
+                console.log("result", result)
+                navigate('/goals',{state:{result}});
+            },
+            (error) => {
+                console.log("error", error)
+                //todo: alert, or retry, or route to error page
+            }
+        )
 
 
     }
