@@ -27,7 +27,7 @@ public class GoalModelDto {
         private String goalName;
 
         @NotNull
-        private List<@Valid GoalHourDto> goalHourDtos;
+        private List<@Valid GoalHourDto> goalHours;
 
         @NotNull
         private Long timestampCreated;

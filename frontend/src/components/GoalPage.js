@@ -1,12 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import {MDBCol, MDBContainer, MDBInput, MDBRow, MDBTypography} from "mdb-react-ui-kit";
 import {useLocation} from 'react-router-dom';
-import { MDBBtn, MDBIcon } from 'mdb-react-ui-kit';
+import { MDBBtn, MDBIcon,    MDBModal,
+    MDBModalDialog,
+    MDBModalContent,
+    MDBModalHeader,
+    MDBModalTitle,
+    MDBModalBody,
+    MDBModalFooter } from 'mdb-react-ui-kit';
 
 
 export function GoalPage() {
 
     const location = useLocation();
+    const userId = location.state.result.userId;
+    const [goalArray, setGoalArray] = useState(location.state.result.goals);
+
+    const [newGoalName, setNewGoalName] = useState('');
+    const [newGoalHours, setNewGoalHours] = useState(20);
+    const [centredModal, setCentredModal] = useState(false);
+
+    //create some state here that is an array of objects that's initially built with the location.state.result
+    //And I just add to it whenever the user adds new goals. And I just save the entire payload to backend
+    //everytime an update happens.
+
     console.log("location",location)
 
     console.log("empty list?", location.state.result.goals.length === 0)
@@ -18,8 +35,49 @@ export function GoalPage() {
     }
 
     const newGoalClicked = () => {
-        console.log("new goal clicked");
+        setCentredModal(!centredModal);
     }
+
+    const handleNewGoalNameChange = (event) => {
+        const myValue = event.target.value;
+        setNewGoalName(myValue);
+    };
+
+    const handleNewGoalHoursChange = (event) => {
+        const myValue = event.target.value;
+        setNewGoalHours(myValue);
+    };
+
+    const handleSavePositionBtnClicked = () => {
+
+        //1. create new object. Then create a new array from existing state array
+
+        let goalHoursArray = []
+        for (let i = 0; i < newGoalHours; i++) {
+            goalHoursArray.push({completed:false});
+        }
+        let newGoalObj = {goalName:newGoalName, goalHours:goalHoursArray, timestampCreated:Date.now()};
+
+        let newArray = [...goalArray];
+        newArray.push(newGoalObj);
+
+        //2. save that new array into backend rest call, which contains all the stuff...
+
+
+        //3. set new array into state of this component so new goal will be rendered on page.
+
+
+        /*const newArray = array.map((ele, i) => {
+            if (i === index) {
+                return {name: newItemName, position: newItemPosition};
+            } else {
+                return ele;
+            }
+        });
+        setArray(newArray);*/
+        setCentredModal(!centredModal)
+
+    };
 
     return (
        <MDBContainer breakpoint='sm' >
@@ -42,6 +100,29 @@ export function GoalPage() {
                <MDBCol md='3'>
                </MDBCol>
            </MDBRow>
+           <MDBModal tabIndex='-1' show={centredModal} setShow={setCentredModal}>
+               <MDBModalDialog centered>
+                   <MDBModalContent>
+                       <MDBModalHeader>
+                           <MDBModalTitle>Add New Goal</MDBModalTitle>
+                           <MDBBtn className='btn-close' color='none' onClick={newGoalClicked}></MDBBtn>
+                       </MDBModalHeader>
+                       <MDBModalBody>
+                           <b>Goal Name:</b>
+                           <MDBInput type='text' onChange={handleNewGoalNameChange}></MDBInput>
+                           <br />
+                           <b>Number of Hours for Goal:</b>
+                           <MDBInput type='text' value={newGoalHours} onChange={handleNewGoalHoursChange}></MDBInput>
+                       </MDBModalBody>
+                       <MDBModalFooter>
+                           <MDBBtn color='secondary' onClick={newGoalClicked}>
+                               Close
+                           </MDBBtn>
+                           <MDBBtn color='success' onClick={handleSavePositionBtnClicked}>Save changes</MDBBtn>
+                       </MDBModalFooter>
+                   </MDBModalContent>
+               </MDBModalDialog>
+           </MDBModal>
 
         </MDBContainer>
     );

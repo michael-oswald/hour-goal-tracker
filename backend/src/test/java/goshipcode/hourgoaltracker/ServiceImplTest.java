@@ -66,8 +66,8 @@ public class ServiceImplTest {
         Assertions.assertNotNull(actual);
         Assertions.assertEquals("userId", actual.getUserId());
         Assertions.assertEquals(expected.getGoals().get(0).getGoalName(), actual.getGoals().get(0).getGoalName());
-        Assertions.assertEquals(expected.getGoals().get(0).getGoalHours().get(0).getCompleted(), actual.getGoals().get(0).getGoalHourDtos().get(0).getCompleted());
-        Assertions.assertEquals(expected.getGoals().get(0).getGoalHours().get(0).getTimeCompleted(), actual.getGoals().get(0).getGoalHourDtos().get(0).getTimeCompleted());
+        Assertions.assertEquals(expected.getGoals().get(0).getGoalHours().get(0).getCompleted(), actual.getGoals().get(0).getGoalHours().get(0).getCompleted());
+        Assertions.assertEquals(expected.getGoals().get(0).getGoalHours().get(0).getTimeCompleted(), actual.getGoals().get(0).getGoalHours().get(0).getTimeCompleted());
     }
 
     @Test
@@ -77,7 +77,7 @@ public class ServiceImplTest {
 
         List<GoalModelDto.GoalDto> goals = new ArrayList<>();
         GoalModelDto.GoalDto goalDto = new GoalModelDto.GoalDto();
-        goalDto.setGoalHourDtos(getGoalHoursDto(timestamp));
+        goalDto.setGoalHours(getGoalHoursDto(timestamp));
         goalDto.setTimestampCreated(timestamp);
         goalDto.setGoalName("coolGoalName");
         goals.add(goalDto);

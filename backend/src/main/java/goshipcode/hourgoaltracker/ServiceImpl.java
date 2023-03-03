@@ -59,7 +59,7 @@ public class ServiceImpl implements Service {
             GoalModelDto.GoalDto goalDto = new GoalModelDto.GoalDto();
             goalDto.setGoalName(goal.getGoalName());
             goalDto.setTimestampCreated(goal.getTimestampCreated());
-            goalDto.setGoalHourDtos(goalHourDtos);
+            goalDto.setGoalHours(goalHourDtos);
             goals.add(goalDto);
         }
 
@@ -78,7 +78,7 @@ public class ServiceImpl implements Service {
         for (GoalModelDto.GoalDto goalDto : goalModelDto.getGoals()) {
             List<GoalModel.GoalHour> goalHours = new ArrayList<>();
 
-            for (GoalModelDto.GoalHourDto goalHourDto : goalDto.getGoalHourDtos()) {
+            for (GoalModelDto.GoalHourDto goalHourDto : goalDto.getGoalHours()) {
                 GoalModel.GoalHour goalHour = new GoalModel.GoalHour();
                 goalHour.setCompleted(goalHourDto.getCompleted());
                 goalHour.setTimeCompleted(goalHourDto.getTimeCompleted());
