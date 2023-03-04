@@ -36,7 +36,6 @@ export function GoalPage() {
     }
 
     const newGoalClicked = () => {
-
         //protect the 5 goal max rule
         if (goalArray.length === 5) {
             alert("sorry 5 goal max, please complete or delete others to create more")
@@ -59,13 +58,34 @@ export function GoalPage() {
         setNewGoalHours(myValue);
     };
 
-    const onCheckBoxClicked = (obj, index) => {
-        console.log("onCheckBoxClicked");
-        console.log("obj", obj);
-        console.log("index", index);
+    const onCheckBoxClicked = (event, goalIndex, goalHourIndex) => {
+        console.log("onCheckBoxClicked event", event);
+        console.log("onCheckBoxClicked checked?", event.target.checked);
+        console.log("goalIndex", goalIndex);
+        console.log("goalHourIndex", goalHourIndex);
+        let timestamp = Date.now()
+        console.log("timestamp created", timestamp);
+
+        //1. create new array
+        let newArray = [...goalArray];
+        console.log("newArray  onCheckBoxClickedonCheckBoxClicked", newArray)
+        console.log("newArray  onCheckBoxClickedonCheckBoxClicked @ goalIndex", newArray[goalIndex])
+        console.log("newArray  onCheckBoxClickedonCheckBoxClicked @ goalHourIndex", newArray[goalIndex].goalHours[goalHourIndex])
+        //newArray.push(newGoalObj);
+
+        //2. update that new array in backend
+        if (event.target.checked === true) {
+            newArray[goalIndex].goalHours[goalHourIndex].completed = true;
+            newArray[goalIndex].goalHours[goalHourIndex].timeCompleted = timestamp;
+        } else { //unchecked
+            newArray[goalIndex].goalHours[goalHourIndex].completed = false;
+            newArray[goalIndex].goalHours[goalHourIndex].timeCompleted = null;
+        }
+        //3. send this new array to backend and update state:
+        updateArrayInBackendAndState(newArray);
     };
 
-    const onDeleteClicked = (index) => {
+    const onDeleteClickedParent = (index) => {
         console.log("onDeleteClicked");
         console.log("index", index);
     };
@@ -88,33 +108,39 @@ export function GoalPage() {
 
         //2. save that new array into backend rest call, which contains all the stuff...
         console.log("new Array", newArray)
-        let updatePayload = {userId:userId, goals:newArray};
-        console.log("updatePayload stringified", JSON.stringify(updatePayload));
+
+
+        updateArrayInBackendAndState(newArray)
+
+        setCentredModal(!centredModal)
+
+    };
+
+    function updateArrayInBackendAndState(newArray) {
+        let postPayload = {userId:userId, goals:newArray};
+        console.log("updatePayload stringified", JSON.stringify(postPayload));
 
         fetch('http://localhost:8080/goal', {
             method: 'POST',
-            body: JSON.stringify(updatePayload),
+            body: JSON.stringify(postPayload),
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*',
             },
         })
-        .then(
-            (result) => {
-                console.log("result YOOOOO", result)
-                //update state
-                setGoalArray(newArray)
-            },
-            (error) => {
-                console.log("error", error)
-                //todo: alert, or retry, or route to error page
-            }
-        )
-
-        setCentredModal(!centredModal)
-
-    };
+            .then(
+                (result) => {
+                    console.log("result YOOOOO", result)
+                    //update state
+                    setGoalArray(newArray)
+                },
+                (error) => {
+                    console.log("error", error)
+                    //todo: alert, or retry, or route to error page
+                }
+            )
+    }
 
     return (
        <MDBContainer breakpoint='sm' >
@@ -135,11 +161,12 @@ export function GoalPage() {
            </MDBRow>
            <MDBRow>
                {goalArray.map((item, i) =>
-                       <Goal goal={item}
+                       <Goal key={i}
+                             goal={item}
                              index={i}
                              onCheckBoxClicked={onCheckBoxClicked}
-                             onDeleteClicked={onDeleteClicked}
-                             key={i} />
+                             onDeleteClicked={() => onDeleteClickedParent(i)}
+                             />
                )}
 
 
