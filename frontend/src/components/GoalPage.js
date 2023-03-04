@@ -9,6 +9,7 @@ import { MDBBtn, MDBIcon,    MDBModal,
     MDBModalBody,
     MDBModalFooter } from 'mdb-react-ui-kit';
 
+import Goal from "./Goal";
 
 export function GoalPage() {
 
@@ -35,6 +36,16 @@ export function GoalPage() {
     }
 
     const newGoalClicked = () => {
+
+        //protect the 5 goal max rule
+        if (goalArray.length === 5) {
+            alert("sorry 5 goal max, please complete or delete others to create more")
+            return;
+        }
+
+        //clear the variables
+        setNewGoalHours(20)
+        setNewGoalName('')
         setCentredModal(!centredModal);
     }
 
@@ -46,6 +57,17 @@ export function GoalPage() {
     const handleNewGoalHoursChange = (event) => {
         const myValue = event.target.value;
         setNewGoalHours(myValue);
+    };
+
+    const onCheckBoxClicked = (obj, index) => {
+        console.log("onCheckBoxClicked");
+        console.log("obj", obj);
+        console.log("index", index);
+    };
+
+    const onDeleteClicked = (index) => {
+        console.log("onDeleteClicked");
+        console.log("index", index);
     };
 
     const handleSavePositionBtnClicked = () => {
@@ -82,6 +104,7 @@ export function GoalPage() {
             (result) => {
                 console.log("result YOOOOO", result)
                 //update state
+                setGoalArray(newArray)
             },
             (error) => {
                 console.log("error", error)
@@ -89,17 +112,6 @@ export function GoalPage() {
             }
         )
 
-        //3. set new array into state of this component so new goal will be rendered on page.
-
-
-        /*const newArray = array.map((ele, i) => {
-            if (i === index) {
-                return {name: newItemName, position: newItemPosition};
-            } else {
-                return ele;
-            }
-        });
-        setArray(newArray);*/
         setCentredModal(!centredModal)
 
     };
@@ -110,20 +122,27 @@ export function GoalPage() {
                Hour Goal Tracker
            </MDBTypography>
            <MDBTypography className='pb-3 mb-3 border-bottom text-center'>
-               Create and Manage your goals below
+               Hello, {userId}! <br/> Create and Manage your goals below. <b>Note: There is 5 goal max limit :)</b>
            </MDBTypography>
            <MDBRow>
-               <MDBCol md='1'>
-               </MDBCol>
+               <MDBCol md='5'/>
+               <MDBCol md='4'/>
                <MDBCol md='3'>
-
-               <MDBBtn onClick={newGoalClicked}>
-                   <MDBIcon className='me-2' fab icon='plus' /> Add New Goal
-               </MDBBtn>
-
+                   <MDBBtn onClick={newGoalClicked}>
+                       <MDBIcon className='me-2' fab icon='plus' /> Add New Goal
+                   </MDBBtn>
                </MDBCol>
-               <MDBCol md='3'>
-               </MDBCol>
+           </MDBRow>
+           <MDBRow>
+               {goalArray.map((item, i) =>
+                       <Goal goal={item}
+                             index={i}
+                             onCheckBoxClicked={onCheckBoxClicked}
+                             onDeleteClicked={onDeleteClicked}
+                             key={i} />
+               )}
+
+
            </MDBRow>
            <MDBModal tabIndex='-1' show={centredModal} setShow={setCentredModal}>
                <MDBModalDialog centered>
@@ -134,7 +153,7 @@ export function GoalPage() {
                        </MDBModalHeader>
                        <MDBModalBody>
                            <b>Goal Name:</b>
-                           <MDBInput type='text' onChange={handleNewGoalNameChange}></MDBInput>
+                           <MDBInput type='text' value={newGoalName} onChange={handleNewGoalNameChange}></MDBInput>
                            <br />
                            <b>Number of Hours for Goal:</b>
                            <MDBInput type='text' value={newGoalHours} onChange={handleNewGoalHoursChange}></MDBInput>
