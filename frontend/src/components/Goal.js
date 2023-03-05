@@ -49,7 +49,7 @@ function Goal({goal, index, onCheckBoxClicked, onDeleteClicked}) {
 
     return (
         <MDBContainer fluid className=" border border-1 rounded">
-            <br></br>
+            <br/>
 
            {/* <MDBTypography className="text-center" variant='h4'>Goal: <b>{prop.goal.goalName}</b> </MDBTypography>*/}
             <MDBTypography tag='div' className='display-6 pb-3 mb-3 border-bottom text-center'>

@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {MDBCol, MDBContainer, MDBInput, MDBRow, MDBTypography} from "mdb-react-ui-kit";
-import {useLocation} from 'react-router-dom';
+import {useLocation, useNavigate} from 'react-router-dom';
 import { MDBBtn, MDBIcon,    MDBModal,
     MDBModalDialog,
     MDBModalContent,
@@ -20,6 +20,7 @@ export function GoalPage() {
     const [newGoalName, setNewGoalName] = useState('');
     const [newGoalHours, setNewGoalHours] = useState(20);
     const [centredModal, setCentredModal] = useState(false);
+    const navigate = useNavigate();
 
     //create some state here that is an array of objects that's initially built with the location.state.result
     //And I just add to it whenever the user adds new goals. And I just save the entire payload to backend
@@ -46,6 +47,10 @@ export function GoalPage() {
         setNewGoalHours(20)
         setNewGoalName('')
         setCentredModal(!centredModal);
+    }
+
+    const logoutClicked = () => {
+        navigate('/');
     }
 
     const handleNewGoalNameChange = (event) => {
@@ -173,12 +178,15 @@ export function GoalPage() {
                Hello, {userId}! <br/> Create and Manage your goals below. <b>Note: There is 5 goal max limit :)</b>
            </MDBTypography>
            <MDBRow>
+               <MDBCol md='5'><MDBBtn onClick={newGoalClicked}>
+                   <MDBIcon className='me-2' fab icon='plus' /> Add New Goal
+               </MDBBtn></MDBCol>
                <MDBCol md='5'/>
-               <MDBCol md='4'/>
-               <MDBCol md='3'>
-                   <MDBBtn onClick={newGoalClicked}>
-                       <MDBIcon className='me-2' fab icon='plus' /> Add New Goal
+               <MDBCol md='2'>
+                   <MDBBtn className='me-1' color='warning' onClick={logoutClicked}>
+                       Logout
                    </MDBBtn>
+
                    <br/><br/>
                </MDBCol>
            </MDBRow>
