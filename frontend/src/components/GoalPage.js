@@ -174,8 +174,8 @@ export function GoalPage() {
            <MDBTypography tag='div' className='display-1 pb-3 mb-3 border-bottom text-center'>
                Hour Goal Tracker
            </MDBTypography>
-           <MDBTypography className='pb-3 mb-3 border-bottom text-center'>
-               Hello, {userId}! <br/> Create and Manage your goals below. <b>Note: There is 5 goal max limit :)</b>
+           <MDBTypography className='pb-3 mb-3 border-bottom '>
+               Hello, <b>{userId}!</b> <br/> Create and Manage your goals below.<br/> Note: The system has a 5 max goal limit. Enjoy! :)
            </MDBTypography>
            <MDBRow>
                <MDBCol md='5'><MDBBtn onClick={newGoalClicked}>
