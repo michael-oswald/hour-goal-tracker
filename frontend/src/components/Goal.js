@@ -11,10 +11,8 @@ import {
 
 function Goal({goal, index, onCheckBoxClicked, onDeleteClicked}) {
     console.log(" See if onDeleteClicked fires")
-    //onDeleteClicked()
 
     console.log(" Goal prop", goal)
-    //console.log(" goalHours from prop", prop.goalName)
     console.log(" goalHours length from prop", goal.goalHours.length)
     console.log(" index prop", index)
 
@@ -26,8 +24,6 @@ function Goal({goal, index, onCheckBoxClicked, onDeleteClicked}) {
         let timeCompleted = goal.goalHours[i].timeCompleted;
         if (timeCompleted === null) {
             timeCompleted = '';
-        } else {
-            console.log("formated time completed", new Date( timeCompleted *1000));
         }
 
         let checkbox = completed ?
@@ -39,11 +35,16 @@ function Goal({goal, index, onCheckBoxClicked, onDeleteClicked}) {
         rows.push(
             <tr key={i}>
                 <td>{checkbox}</td>
-                <td>{timeCompleted}</td>
+                <td>{formatTime(timeCompleted)}</td>
                 <td></td>
             </tr>
         )
 
+    }
+
+    function formatTime(epoch){
+        if (epoch === '' || epoch === null) return '';
+        return (new Date(epoch)).toString();
     }
 
     return (

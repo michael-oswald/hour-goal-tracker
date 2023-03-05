@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import {MDBCol, MDBContainer, MDBInput, MDBRow, MDBTypography} from "mdb-react-ui-kit";
 import {useLocation} from 'react-router-dom';
 import { MDBBtn, MDBIcon,    MDBModal,
@@ -88,6 +88,17 @@ export function GoalPage() {
     const onDeleteClickedParent = (index) => {
         console.log("onDeleteClicked");
         console.log("index", index);
+
+        //1. create new array
+        let newArray = [...goalArray];
+
+        //2. delete index from goal
+        newArray.splice(index, 1);
+
+        //console.log("newArray array after splice", newArray)
+
+        //3. send this new array to backend and update state:
+        updateArrayInBackendAndState(newArray);
     };
 
     const handleSavePositionBtnClicked = () => {
@@ -142,6 +153,17 @@ export function GoalPage() {
             )
     }
 
+    useEffect(() => {
+        window.onbeforeunload = function() {
+            alert( "This page is reloaded" );
+            return true;
+        };
+
+        return () => {
+            window.onbeforeunload = null;
+        };
+    }, []);
+
     return (
        <MDBContainer breakpoint='sm' >
            <MDBTypography tag='div' className='display-1 pb-3 mb-3 border-bottom text-center'>
@@ -157,6 +179,7 @@ export function GoalPage() {
                    <MDBBtn onClick={newGoalClicked}>
                        <MDBIcon className='me-2' fab icon='plus' /> Add New Goal
                    </MDBBtn>
+                   <br/><br/>
                </MDBCol>
            </MDBRow>
            <MDBRow>
