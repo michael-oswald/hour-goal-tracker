@@ -136,7 +136,8 @@ export function GoalPage() {
         let postPayload = {userId:userId, goals:newArray};
         console.log("updatePayload stringified", JSON.stringify(postPayload));
 
-        fetch('http://localhost:8080/goal', {
+        /*fetch('http://localhost:8080/goal', {*/
+        fetch('https://ekgdmj5hag.us-east-1.awsapprunner.com/goal', {
             method: 'POST',
             body: JSON.stringify(postPayload),
             headers: {
