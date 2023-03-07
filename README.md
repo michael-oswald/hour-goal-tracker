@@ -3,14 +3,17 @@ This app is for users to track hours spent towards their goals.
 Sometimes we as humans are a terrible at judging how many hours we ACTUALLY put into working on our goals.
 If we actually track the hours, we'll have more accountability and likely achieve more progress. 
 
-## What does this app do?
+# What does this app do?
 Lets you create an account (via email address or unique string)
 Lets you create goals and record your time spent on the goal. 
 Visit App here: https://up9psjypvd.us-east-1.awsapprunner.com/
 
+# What it looks like:
+![](./hour-goal-tracker.gif)
+
 [screen shot here of gif of app]
 
-## The Tech Stack
+# The Tech Stack
 **Frontend:**
 * React 18.2.x
 * React Router 6.8.x
@@ -23,7 +26,7 @@ Visit App here: https://up9psjypvd.us-east-1.awsapprunner.com/
 * Dockerized and deployed to AWS App Runner
 * Written in 100% TDD style of development
 
-## How to run locally?
+# How to run locally?
 #### Frontend:
 
 The frontend is already pointing to the backend server deployed on AWS, so you don't need 
@@ -68,17 +71,16 @@ You can see the health say `UP` here: http://localhost:8080/actuator/health
 
 `TODO: Put some instructions on how to run local dynamodb for development`
 
-## Deployment to AWS
+# Deployment to AWS
 I deployed the frontend and backend to [AWS App Runner](https://aws.amazon.com/apprunner/) that just takes a container and runs it for you. 
 I deployed using the handy [copilot cli](https://aws.amazon.com/containers/copilot/)
 
 You can see the copilot config files in this repo here, and here. 
 
-I have not tried this, but you should be able to deploy these applications yourself to AWS copilot by 
-cloning this repo and executing the following 
+I have not tried this, but you should be able to deploy these applications yourself to AWS app runner with copilot by 
+cloning this repo and executing the following: 
 
-
-From the frontend:
+From the frontend directory:
 ```
 cd frontend
 copilot svc deploy
@@ -91,7 +93,7 @@ copilot svc deploy
 ```
 
 
-## What I learned during this project
+# What I learned during this project
 * Dynamodb enhanced client using java aws sdk 2.0. I've always used the 1.0 dynamodb mapper before, so this was a new 
 library I haven't used before. It seemed to be easy to use and setup, I'll be using it from now on.
 
