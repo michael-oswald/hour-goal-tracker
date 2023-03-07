@@ -11,8 +11,6 @@ Visit App here: https://up9psjypvd.us-east-1.awsapprunner.com/
 # What it looks like:
 ![](./hour-goal-tracker.gif)
 
-[screen shot here of gif of app]
-
 # The Tech Stack
 **Frontend:**
 * React 18.2.x
@@ -97,7 +95,7 @@ copilot svc deploy
 * Dynamodb enhanced client using java aws sdk 2.0. I've always used the 1.0 dynamodb mapper before, so this was a new 
 library I haven't used before. It seemed to be easy to use and setup, I'll be using it from now on.
 
-* React Router passing props to the new page. TODO: Add link here
+* React Router passing props to the new page - [Link here](https://github.com/goshipcode/hour-goal-tracker/blob/main/frontend/src/components/LoginPage.js#L27)
 
 * React [Lifting State up](https://beta.reactjs.org/learn/sharing-state-between-components) 
   By passing event handlers. Don't pass state objects down to child components, only pass static props, and event handlers!
