@@ -6,7 +6,7 @@ If we actually track the hours, we'll have more accountability and likely achiev
 # What does this app do?
 Lets you create an account (via email address or unique string)
 Lets you create goals and record your time spent on the goal. 
-Visit App here: https://up9psjypvd.us-east-1.awsapprunner.com/
+Visit App here: https://up9psjypvd.us-east-1.awsapprunner.com/ (this might not work if I decided to take the app down)
 
 # What it looks like:
 ![](./hour-goal-tracker.gif)
@@ -30,7 +30,7 @@ Visit App here: https://up9psjypvd.us-east-1.awsapprunner.com/
 
 #### Step 1 Local Backend:
 
-Since this app uses dynamodb as the datastore, we need dynamodb locally (so we don't have to spend $ on the cloud one just for running this app locally)
+Since this app uses [dynamodb](https://aws.amazon.com/dynamodb/) as the datastore, we need dynamodb available locally (so we don't have to spend $ on the cloud one just for running this app locally)
 
 ##### Setup Local Dynamodb:
 Prereq: You'll need docker up and running locally
@@ -70,9 +70,7 @@ Note: ^ We're passing the Java property `dynamodb.local.endpoint` to tell our ap
 Now check that your backend application is up and running by visiting http://localhost:8080/actuator/health, you can see the health say `UP`.
 
 
-#### Frontend:
- 
-to deploy a local backend server to interact with the UI locally.
+#### 2. Frontend:
 
 First you need to clone or download the zip of this github repo
 ```                                                                                                            
@@ -94,14 +92,14 @@ Now run the app with npm
 npm start                                                                                                    
 ``` 
 
-Navigate to http://localhost:3000/ to see the app!
+Navigate to http://localhost:3000/ to see the application!
 
 
 # Deployment to AWS
 I deployed the frontend and backend to [AWS App Runner](https://aws.amazon.com/apprunner/) that just takes a container and runs it for you. 
 I deployed using the handy [copilot cli](https://aws.amazon.com/containers/copilot/)
 
-You can see the copilot config files in this repo here, and here. 
+You can see the copilot config files in this repo [backend here](./backend/copilot), and [frontend here](./frontend/copilot). 
 
 I have not tried this, but you should be able to deploy these applications yourself to AWS app runner with copilot by 
 cloning this repo and executing the following: 
@@ -117,7 +115,7 @@ From the backend: (Note Prereq: you'll need to add your aws account id for the d
 cd backend
 copilot svc deploy
 ```
-
+Please put an issue on this repo if this doesn't work. 
 
 # What I learned during this project
 * Dynamodb enhanced client using java aws sdk 2.0. I've always used the 1.0 dynamodb mapper before, so this was a new 
