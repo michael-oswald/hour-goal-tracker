@@ -25,9 +25,53 @@ Visit App here: https://up9psjypvd.us-east-1.awsapprunner.com/
 * Written in 100% TDD style of development
 
 # How to run locally?
-#### Frontend:
+1. First run the backend
+2. Then run the frontend
 
-The frontend is already pointing to the backend server deployed on AWS, so you don't need 
+#### Step 1 Local Backend:
+
+Since this app uses dynamodb as the datastore, we need dynamodb locally (so we don't have to spend $ on the cloud one just for running this app locally)
+
+##### Setup Local Dynamodb:
+Prereq: You'll need docker up and running locally
+Then execute this to run the dynamodb docker container on port 8000
+```
+docker run --detach -p 8000:8000 amazon/dynamodb-local
+```
+
+Now create the dynamodb table needed for this application: (you'll need [AWS cli](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html) installed for this part)
+```
+aws dynamodb create-table --table-name hour-goal-tracker --attribute-definitions AttributeName=userId,AttributeType=S --key-schema AttributeName=userId,KeyType=HASH --provisioned-throughput ReadCapacityUnits=1,WriteCapacityUnits=1 --endpoint-url http://localhost:8000
+```
+Now see if it worked by listing the tables:
+```
+aws dynamodb list-tables --endpoint-url http://localhost:8000
+
+You should see:
+{
+    "TableNames": [
+        "hour-goal-tracker"
+    ]
+}
+```
+
+To run the spring boot backend app first navigate to the backend directory on your cloned code:
+```
+cd hour-goal-tracker/backend
+```
+
+Run the application locally with the maven wrapper (you'll need Java 17 installed first) Here is a the [brew link if you use a mac](https://formulae.brew.sh/formula/openjdk@17)
+
+```
+./mvnw spring-boot:run -Dspring-boot.run.jvmArguments="-Ddynamodb.local.endpoint=http://localhost:8000"
+```
+Note: ^ We're passing the Java property `dynamodb.local.endpoint` to tell our app to point to a local dynamodb instance
+
+Now check that your backend application is up and running by visiting http://localhost:8080/actuator/health, you can see the health say `UP`.
+
+
+#### Frontend:
+ 
 to deploy a local backend server to interact with the UI locally.
 
 First you need to clone or download the zip of this github repo
@@ -52,22 +96,6 @@ npm start
 
 Navigate to http://localhost:3000/ to see the app!
 
-#### Backend:
-To run the spring boot backend first navigate to the backend directory on your cloned code:
-```
-cd hour-goal-tracker/backend
-```
-
-Run the application locally with the maven wrapper (you'll need Java 17 installed first) Here is a the [brew link if you use a mac](https://formulae.brew.sh/formula/openjdk@17)
-
-```
-./mvnw spring-boot:run
-```
-You can see the health say `UP` here: http://localhost:8080/actuator/health
-
-**Note:** To fully run this backend you'll need a local dynamodb instance, or create your own AWS dynamodb table with the table name: `hour-goal-tracker`
-
-`TODO: Put some instructions on how to run local dynamodb for development`
 
 # Deployment to AWS
 I deployed the frontend and backend to [AWS App Runner](https://aws.amazon.com/apprunner/) that just takes a container and runs it for you. 
