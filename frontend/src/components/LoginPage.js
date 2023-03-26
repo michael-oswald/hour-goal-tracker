@@ -11,8 +11,8 @@ export function LoginPage() {
 
         //make rest call to backend:
 
-        /*fetch('http://localhost:8080/goal/' + email, {*/
-        fetch('https://ekgdmj5hag.us-east-1.awsapprunner.com/goal/' + email, {
+        fetch('http://localhost:8080/goal/' + email, {
+        /*fetch('https://ekgdmj5hag.us-east-1.awsapprunner.com/goal/' + email, {*/
             method: 'GET',
             headers: {
                 Accept: 'application/json',
